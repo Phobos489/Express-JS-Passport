@@ -1,0 +1,8 @@
+/node_modules
+/uploads/dokumen
+/uploads/kk
+/uploads/ktp
+/uploads/surat_ganti_nama
+/uploads/surat_pewarganegaraan
+package-lock.json
+.env
