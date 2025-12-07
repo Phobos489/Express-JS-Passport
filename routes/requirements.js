@@ -5,6 +5,11 @@ const requirementController = require('../controllers/requirementController');
 const { authenticate, authorize } = require('../middleware/auth');
 const upload = require('../middleware/upload');
 
+router.get(
+  '/statistics',
+  requirementController.getStatistics
+);
+
 router.post(
   '/submit',
   authenticate,

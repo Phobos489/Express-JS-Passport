@@ -2,6 +2,19 @@
 const db = require('../config/database');
 
 class Requirement {
+  static async getStatistics() {
+    const query = `
+      SELECT 
+        COUNT(*) as total,
+        SUM(CASE WHEN status = 'diterima' THEN 1 ELSE 0 END) as diterima,
+        SUM(CASE WHEN status = 'ditolak' THEN 1 ELSE 0 END) as ditolak,
+        SUM(CASE WHEN status = 'diproses' THEN 1 ELSE 0 END) as diproses
+      FROM requirements
+    `;
+    const [rows] = await db.execute(query);
+    return rows[0];
+  }
+
   static async create(data) {
     const query = `
       INSERT INTO requirements 
