@@ -27,6 +27,63 @@ class User {
     return rows[0] || null;
   }
 
+  static async findByIdWithPassword(id) {
+    const query = `SELECT id, email, password, role, nama_lengkap, tanggal_lahir, tempat_lahir, alamat, no_telepon, created_at
+                   FROM users WHERE id = ? LIMIT 1`;
+    const [rows] = await db.execute(query, [id]);
+    return rows[0] || null;
+  }
+
+  static async updateProfile(id, updateData) {
+    const {
+      nama_lengkap,
+      tanggal_lahir,
+      tempat_lahir,
+      alamat,
+      no_telepon
+    } = updateData;
+
+    const query = `
+      UPDATE users 
+      SET 
+        nama_lengkap = ?,
+        tanggal_lahir = ?,
+        tempat_lahir = ?,
+        alamat = ?,
+        no_telepon = ?,
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `;
+
+    const params = [
+      nama_lengkap,
+      tanggal_lahir,
+      tempat_lahir,
+      alamat,
+      no_telepon,
+      id
+    ];
+
+    const [result] = await db.execute(query, params);
+    return result;
+  }
+
+  static async updatePassword(id, newPassword) {
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+
+    const query = `
+      UPDATE users 
+      SET 
+        password = ?,
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `;
+
+    const [result] = await db.execute(query, [hashedPassword, id]);
+    return result;
+  }
+
   static async comparePassword(plainPassword, hashedPassword) {
     return bcrypt.compare(plainPassword, hashedPassword);
   }
