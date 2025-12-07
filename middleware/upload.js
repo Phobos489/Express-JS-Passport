@@ -3,7 +3,6 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// Ensure that upload folder exists
 const ensureDir = (dir) => {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
@@ -14,7 +13,8 @@ const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     let folder = 'uploads/lainnya';
 
-    if (file.fieldname === 'ktp') folder = 'uploads/ktp';
+    if (file.fieldname === 'foto') folder = 'uploads/foto';  // TAMBAHKAN INI
+    else if (file.fieldname === 'ktp') folder = 'uploads/ktp';
     else if (file.fieldname === 'kk') folder = 'uploads/kk';
     else if (file.fieldname === 'dokumen') folder = 'uploads/dokumen';
     else if (file.fieldname === 'surat_pewarganegaraan') folder = 'uploads/surat_pewarganegaraan';
@@ -30,7 +30,6 @@ const storage = multer.diskStorage({
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
     const filename = uniqueSuffix + path.extname(file.originalname);
 
-    // Simpan path relatif untuk database
     file.relativePath = `uploads/${file.fieldname}/${filename}`;
 
     cb(null, filename);

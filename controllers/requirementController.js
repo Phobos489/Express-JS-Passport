@@ -1,18 +1,15 @@
 // controllers/requirementController.js
 const Requirement = require('../models/Requirement');
 
-// controllers/requirementController.js
 exports.getStatistics = async (req, res) => {
   try {
     const stats = await Requirement.getStatistics();
 
-    // Tambahkan data default atau tambahan jika diperlukan
     const response = {
       total: stats.total || 0,
       diterima: stats.diterima || 0,
       ditolak: stats.ditolak || 0,
       diproses: stats.diproses || 0,
-      // Optional: tambahkan data dummy untuk demo
       acceptance_rate: stats.total > 0
         ? Math.round((stats.diterima / stats.total) * 100)
         : 0
@@ -21,7 +18,6 @@ exports.getStatistics = async (req, res) => {
     res.json(response);
   } catch (err) {
     console.error(err);
-    // Return default statistics on error
     res.json({
       total: 50,
       diterima: 45,
@@ -45,6 +41,7 @@ exports.submitRequirements = async (req, res) => {
 
     const requirementData = {
       user_id: userId,
+      foto_path: files['foto'] ? files['foto'][0].relativePath : null,  // TAMBAHKAN INI
       ktp_path: files['ktp'] ? files['ktp'][0].relativePath : null,
       kk_path: files['kk'] ? files['kk'][0].relativePath : null,
       dokumen_path: files['dokumen'] ? files['dokumen'][0].relativePath : null,
@@ -52,8 +49,9 @@ exports.submitRequirements = async (req, res) => {
       surat_ganti_nama_path: files['surat_ganti_nama'] ? files['surat_ganti_nama'][0].relativePath : null
     };
 
-    if (!requirementData.ktp_path || !requirementData.kk_path || !requirementData.dokumen_path) {
-      return res.status(400).json({ message: 'KTP, KK, dan dokumen wajib diunggah' });
+    // VALIDASI: Foto, KTP, KK, dan dokumen wajib
+    if (!requirementData.foto_path || !requirementData.ktp_path || !requirementData.kk_path || !requirementData.dokumen_path) {
+      return res.status(400).json({ message: 'Foto, KTP, KK, dan dokumen wajib diunggah' });
     }
 
     const result = await Requirement.create(requirementData);
@@ -75,7 +73,6 @@ exports.getUserRequirements = async (req, res) => {
   }
 };
 
-// <-- TAMBAHKAN controller untuk admin melihat semua
 exports.getAllRequirements = async (req, res) => {
   try {
     const data = await Requirement.findAll();
@@ -86,7 +83,6 @@ exports.getAllRequirements = async (req, res) => {
   }
 };
 
-// <-- update status (jika belum ada di file)
 exports.updateStatus = async (req, res) => {
   try {
     const { id } = req.params;

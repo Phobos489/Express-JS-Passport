@@ -15,6 +15,7 @@ router.post(
   authenticate,
   authorize(['user']),
   upload.fields([
+    { name: 'foto', maxCount: 1 },  // TAMBAHKAN INI
     { name: 'ktp', maxCount: 1 },
     { name: 'kk', maxCount: 1 },
     { name: 'dokumen', maxCount: 1 },
@@ -31,7 +32,6 @@ router.get(
   requirementController.getUserRequirements
 );
 
-// ADMIN route: semua pengajuan
 router.get(
   '/all',
   authenticate,
@@ -39,7 +39,6 @@ router.get(
   requirementController.getAllRequirements
 );
 
-// ADMIN update status
 router.put(
   '/:id/status',
   authenticate,

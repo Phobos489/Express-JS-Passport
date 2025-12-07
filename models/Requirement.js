@@ -18,11 +18,12 @@ class Requirement {
   static async create(data) {
     const query = `
       INSERT INTO requirements 
-      (user_id, ktp_path, kk_path, dokumen_path, surat_pewarganegaraan_path, surat_ganti_nama_path)
-      VALUES (?, ?, ?, ?, ?, ?)
+      (user_id, foto_path, ktp_path, kk_path, dokumen_path, surat_pewarganegaraan_path, surat_ganti_nama_path)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
     `;
     const params = [
       data.user_id,
+      data.foto_path,  // TAMBAHKAN INI
       data.ktp_path,
       data.kk_path,
       data.dokumen_path,
@@ -39,7 +40,6 @@ class Requirement {
     return rows;
   }
 
-  // <-- tambahkan method findAll di sini
   static async findAll() {
     const query = `
       SELECT r.*, u.nama_lengkap, u.email
