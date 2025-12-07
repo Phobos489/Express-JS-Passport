@@ -6,6 +6,7 @@ require('dotenv').config();
 
 const authRoutes = require('./routes/auth');
 const requirementRoutes = require('./routes/requirements');
+const userRoutes = require('./routes/users'); // TAMBAHKAN INI
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/requirements', requirementRoutes);
+app.use('/api/users', userRoutes); // TAMBAHKAN INI
 
 // Global error handler (multer errors included)
 app.use((err, req, res, next) => {

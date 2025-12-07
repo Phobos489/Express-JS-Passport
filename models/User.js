@@ -14,6 +14,19 @@ class User {
     return result;
   }
 
+  // Tambahkan method ini di class User (models/User.js)
+  static async findAllUsers() {
+    const query = `
+    SELECT id, email, role, nama_lengkap, tanggal_lahir, tempat_lahir, 
+           alamat, no_telepon, created_at
+    FROM users 
+    WHERE role = 'user'
+    ORDER BY created_at DESC
+  `;
+    const [rows] = await db.execute(query);
+    return rows;
+  }
+
   static async findByEmail(email) {
     const query = 'SELECT * FROM users WHERE email = ? LIMIT 1';
     const [rows] = await db.execute(query, [email]);
